@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import { Lock, LogIn, Loader2, AlertCircle, ExternalLink, User, KeyRound } from 'lucide-react';
+import React, { useState } from "react";
+import {
+    Lock,
+    LogIn,
+    Loader2,
+    AlertCircle,
+    ExternalLink,
+    User,
+    KeyRound,
+} from "lucide-react";
 
 const API_URL = "https://api-ar-umkm-97qh.vercel.app/api";
 
@@ -16,9 +24,9 @@ export default function LoginPage({ onLoginSuccess }) {
 
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
             });
 
             const data = await res.json();
@@ -52,19 +60,24 @@ export default function LoginPage({ onLoginSuccess }) {
             </div>
 
             <div className="relative w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 sm:p-10 animate-fade-in-up">
-
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 text-white mb-4 shadow-lg shadow-indigo-200">
                         <Lock size={28} />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Welcome Back! 👋</h1>
-                    <p className="text-gray-500 text-sm mt-2">Masukin kredensial Admin buat akses Dashboard.</p>
+                    <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+                        Welcome Back! 👋
+                    </h1>
+                    <p className="text-gray-500 text-sm mt-2">
+                        Masukin kredensial Admin buat akses Dashboard.
+                    </p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-5">
                     <div className="space-y-4">
                         <div className="group">
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Username</label>
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">
+                                Username
+                            </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors">
                                     <User size={18} />
@@ -81,7 +94,9 @@ export default function LoginPage({ onLoginSuccess }) {
                         </div>
 
                         <div className="group">
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">Password</label>
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5 ml-1">
+                                Password
+                            </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors">
                                     <KeyRound size={18} />
@@ -127,7 +142,7 @@ export default function LoginPage({ onLoginSuccess }) {
                 <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p className="text-gray-400 text-sm mb-2">Bukan Admin?</p>
                     <a
-                        href="/shop.html"
+                        href="/shop"
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline decoration-2 underline-offset-2 transition-colors"
                     >
                         <ExternalLink size={14} />
