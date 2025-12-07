@@ -142,7 +142,7 @@ export default function LoginPage({ onLoginSuccess }) {
                 <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p className="text-gray-400 text-sm mb-2">Bukan Admin?</p>
                     <a
-                        href="/shop"
+                        href="/shop.html"
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline decoration-2 underline-offset-2 transition-colors"
                     >
                         <ExternalLink size={14} />
