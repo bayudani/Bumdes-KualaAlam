@@ -22,10 +22,9 @@
         #app-container {
             position: relative;
             width: 100%;
-            height: 100vh; /* Full viewport height */
-            /* background: black; <--- INI BIANG KEROKNYA, KITA HAPUS! */
+            height: 100vh; 
             overflow: hidden;
-            background-color: #333; /* Kasih warna gelap default aja */
+            background-color: #333; 
         }
 
         /* Responsive Desktop: Batasi lebar kayak HP */
@@ -40,11 +39,10 @@
                 max-width: 28rem; /* max-w-md equivalent */
                 height: 100vh; 
                 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-                border-radius: 0px; /* Opsional: mau rounded atau kotak */
+                border-radius: 0px; 
             }
         }
 
-        /* UI Layer di atas AR */
         #ui-layer { 
             position: absolute; 
             top: 0; left: 0; 
@@ -119,13 +117,12 @@
         a-scene {
             width: 100%;
             height: 100%;
-            position: absolute; /* Pastikan dia nempel absolute */
+            position: absolute; 
             top: 0;
             left: 0;
-            z-index: 1; /* Di bawah UI Layer */
+            z-index: 1; 
         }
         
-        /* Fix Video Camera MindAR */
         video {
             object-fit: cover !important;
             position: absolute !important;
@@ -133,7 +130,7 @@
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
-            z-index: 0 !important; /* Paling belakang */
+            z-index: 0 !important; 
         }
     </style>
 </head>

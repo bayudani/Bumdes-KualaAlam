@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = "https://api-ar-umkm-97qh.vercel.app/api"; // Base API URL
+const API_URL = "https://api-ar-umkm-97qh.vercel.app/api"; 
 
 export const useProducts = () => {
     const [products, setProducts] = useState([]);
@@ -22,8 +22,7 @@ export const useProducts = () => {
     };
 
     // --- READ (GET) ---
-    // Biasanya GET produk itu public, tapi kalau backend lo protect GET juga, 
-    // dia bakal otomatis pake header auth kalau tokennya ada.
+    
     const fetchProducts = useCallback(async () => {
         setLoading(true);
         try {
@@ -38,7 +37,7 @@ export const useProducts = () => {
                 showToast('Gagal ambil data ', 'error');
             }
         } catch (err) {
-            showToast('Server lagi ngambek nih', 'error');
+            showToast('Server error', 'error');
         } finally {
             setLoading(false);
         }
@@ -48,7 +47,7 @@ export const useProducts = () => {
         fetchProducts();
     }, [fetchProducts]);
 
-    // --- CREATE & UPDATE (POST/PATCH) - PROTECTED 🔒 ---
+    // --- CREATE & UPDATE (POST/PATCH) - PROTECTED  ---
     const saveProduct = async (formData, isEditing, currentId) => {
         setSubmitting(true);
         const data = new FormData();
@@ -62,13 +61,10 @@ export const useProducts = () => {
             const url = isEditing ? `${API_URL}/product/${currentId}` : `${API_URL}/product/`;
             const method = isEditing ? 'PATCH' : 'POST';
 
-            // Disini kita selipin Header Authorization
             const res = await fetch(url, {
                 method,
                 headers: {
-                    ...getAuthHeaders() // <--- KUNCI MASUKNYA DI SINI
-                    // Note: Jangan set 'Content-Type': 'multipart/form-data' manual, 
-                    // biar browser yang atur boundary-nya.
+                    ...getAuthHeaders() 
                 },
                 body: data
             });
@@ -84,7 +80,7 @@ export const useProducts = () => {
             }
 
             if (res.ok && (result.status === 'success' || result.status === 'true')) {
-                showToast(isEditing ? 'Produk berhasil diupdate! ✨' : 'Produk baru meluncur! 🚀');
+                showToast(isEditing ? 'Produk berhasil diupdate! ✨' : 'Produk baru meluncur!');
                 fetchProducts();
                 return true;
             } else {
