@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 // === IMPORTS KOMPONEN ===
+// Pastikan file-file ini udah ada di folder components & hooks ya!
 import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import ProductTable from './components/ProductTable';
@@ -19,83 +20,112 @@ import { useProducts } from './hooks/useProducts';
 
 export default function App() {
   
+  // --- 1. AUTHENTICATION (Lazy Init) ---
+  // Cek localStorage langsung saat inisialisasi state biar gak flicker
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Ambil token, kalau ada berarti true
     return !!localStorage.getItem("authToken");
   });
 
-  const [viewMode, setViewMode] = useState('table'); 
+  // --- 2. STATE UI ---
+  const [viewMode, setViewMode] = useState('table'); // Default: Table View
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // State Form & Preview
+  // --- 3. STATE FORM (Data Produk) ---
   const [formData, setFormData] = useState({ 
-    slug: '', name: '', price: '', description: '', composition: '', image: null, video: null 
+    slug: '', 
+    name: '', 
+    price: '', 
+    description: '', 
+    composition: '', 
+    image: null, 
+    video: null,
+    has_ar: false // 🔥 Default status AR mati
   });
   const [previews, setPreviews] = useState({ image: null, video: null });
 
-  // Panggil logic produk dari Custom Hook (Otak-nya)
+  // --- 4. CUSTOM HOOK (Logic API) ---
   const { products, loading, toast, submitting, saveProduct, deleteProduct } = useProducts();
 
-  
+  // --- HANDLERS ---
+
   const handleLogout = () => {
-    if(window.confirm("Yakin mau logout?")) {
+    if(window.confirm("Yakin mau logout bestie? 🥺")) {
         localStorage.removeItem("authToken");
         setIsAuthenticated(false);
     }
   };
 
-  // --- FORM HANDLERS ---
+  // Handle Input Text & Checkbox
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ 
+        ...prev, 
+        // Kalau checkbox pake 'checked', kalau text pake 'value'
+        [name]: type === 'checkbox' ? checked : value 
+    }));
   };
 
+  // Handle Input File
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files && files[0]) {
       const file = files[0];
       setFormData(prev => ({ ...prev, [name]: file }));
+      // Bikin preview URL buat ditampilin
       setPreviews(prev => ({ ...prev, [name]: URL.createObjectURL(file) }));
     }
   };
 
+  // Reset Form (Bersihin sisa data lama)
   const resetForm = () => {
-    setFormData({ slug: '', name: '', price: '', description: '', composition: '', image: null, video: null });
+    setFormData({ 
+        slug: '', name: '', price: '', description: '', composition: '', 
+        image: null, video: null, has_ar: false 
+    });
     setPreviews({ image: null, video: null });
     setIsEditing(false);
     setCurrentId(null);
     setIsModalOpen(false);
   };
 
+  // Buka Modal Edit (Isi data lama ke form)
   const openEditModal = (product) => {
     setIsEditing(true);
     setCurrentId(product.id);
     setFormData({
-      slug: product.slug, name: product.name, price: product.price,
-      description: product.description || '', composition: product.composition || '',
-      image: null, video: null
+      slug: product.slug, 
+      name: product.name, 
+      price: product.price,
+      description: product.description || '', 
+      composition: product.composition || '',
+      // 🔥 Load status AR dari database (pastikan boolean)
+      has_ar: product.has_ar === true || product.has_ar === 1,
+      image: null, 
+      video: null
     });
+    // Tampilkan gambar/video lama di preview
     setPreviews({ image: product.image_url, video: product.video_url });
     setIsModalOpen(true);
   };
 
-  // --- CRUD ACTIONS ---
+  // Submit Data (Create / Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await saveProduct(formData, isEditing, currentId);
     if (success) resetForm();
   };
 
+  // Hapus Data
   const handleDelete = (id) => {
     if (window.confirm("Yakin mau hapus? Gak bisa undo loh... 🥺")) {
       deleteProduct(id);
     }
   };
 
-  // --- FILTERING ---
+  // Filter Pencarian
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.slug.toLowerCase().includes(searchQuery.toLowerCase())
@@ -110,6 +140,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-10">
       
+      {/* HEADER (Pass fungsi logout ke Navbar) */}
       <Navbar onLogout={handleLogout} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -133,8 +164,8 @@ export default function App() {
 
           {/* KANAN: Action Buttons (Tambah & Toggle View) */}
           <div className="flex items-center gap-3 w-full md:w-auto">
-              
-            {/* Tombol Tambah Produk (Sekarang di Body!) */}
+            
+            {/* Tombol Tambah Produk */}
             <button 
               onClick={() => { resetForm(); setIsModalOpen(true); }}
               className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-indigo-200 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
@@ -173,7 +204,7 @@ export default function App() {
         ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
             <PackageOpen size={48} className="mb-2 opacity-50" />
-            <p>Belum ada produk nih.</p>
+            <p>Belum ada produk nih, Bestie.</p>
           </div>
         ) : (
           /* Conditional Rendering: Table vs Grid */

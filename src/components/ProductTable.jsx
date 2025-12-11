@@ -34,7 +34,14 @@ export default function ProductTable({ products, onEdit, onDelete }) {
                                             )}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{product.name}</p>
+                                            <div className="flex items-center gap-2">
+                                                <p className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{product.name}</p>
+                                                
+                                                {/* 🔥 BADGE AR DI TABLE */}
+                                                {(product.has_ar === true || product.has_ar === 1) && (
+                                                    <span className="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-200">AR</span>
+                                                )}
+                                            </div>
                                             <p className="text-xs text-gray-400 line-clamp-1 max-w-[200px]">{product.description || 'No desc'}</p>
                                         </div>
                                     </div>

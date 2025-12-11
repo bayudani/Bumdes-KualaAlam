@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_URL = "https://api-ar-umkm-97qh.vercel.app/api"; 
+const API_URL = "https://api-ar-umkm-97qh.vercel.app/api";
 
 export const useProducts = () => {
     const [products, setProducts] = useState([]);
@@ -8,21 +8,18 @@ export const useProducts = () => {
     const [toast, setToast] = useState({ show: false, message: '', type: '' });
     const [submitting, setSubmitting] = useState(false);
 
-    // --- HELPER: TOAST ---
     const showToast = useCallback((message, type = 'success') => {
         setToast({ show: true, message, type });
         setTimeout(() => setToast({ show: false, message: '', type: '' }), 3000);
     }, []);
 
-    // --- HELPER: GET TOKEN ---
-    // Ambil token dari brankas (localStorage) buat ditempel di header
+    // Helper: Ambil Token
     const getAuthHeaders = () => {
         const token = localStorage.getItem("authToken");
         return token ? { 'Authorization': `Bearer ${token}` } : {};
     };
 
-    // --- READ (GET) ---
-    
+    // GET Data
     const fetchProducts = useCallback(async () => {
         setLoading(true);
         try {
@@ -30,14 +27,13 @@ export const useProducts = () => {
                 headers: { ...getAuthHeaders() }
             });
             const json = await res.json();
-
             if (json.status === 'success') {
                 setProducts(json.data);
             } else {
-                showToast('Gagal ambil data ', 'error');
+                showToast('Gagal ambil data bestie 😭', 'error');
             }
         } catch (err) {
-            showToast('Server error', 'error');
+            showToast('Server lagi ngambek nih', 'error');
         } finally {
             setLoading(false);
         }
@@ -47,14 +43,18 @@ export const useProducts = () => {
         fetchProducts();
     }, [fetchProducts]);
 
-    // --- CREATE & UPDATE (POST/PATCH) - PROTECTED  ---
+    // SAVE (Create/Update)
     const saveProduct = async (formData, isEditing, currentId) => {
         setSubmitting(true);
         const data = new FormData();
 
-        // Convert object ke FormData
         Object.keys(formData).forEach(key => {
-            if (formData[key]) data.append(key, formData[key]);
+            // Handle khusus boolean has_ar biar kebaca backend string
+            if (key === 'has_ar') {
+                data.append(key, formData[key]);
+            } else if (formData[key]) {
+                data.append(key, formData[key]);
+            }
         });
 
         try {
@@ -63,28 +63,26 @@ export const useProducts = () => {
 
             const res = await fetch(url, {
                 method,
-                headers: {
-                    ...getAuthHeaders() 
-                },
+                headers: { ...getAuthHeaders() },
                 body: data
             });
 
             const result = await res.json();
 
-            // Cek kalau token expired (401/403)
+            // Cek Token Expired
             if (res.status === 401 || res.status === 403) {
                 showToast('Sesi habis! Login ulang ya.', 'error');
                 localStorage.removeItem("authToken");
-                setTimeout(() => window.location.reload(), 1500); // Tendang ke login page
+                setTimeout(() => window.location.reload(), 1500);
                 return false;
             }
 
             if (res.ok && (result.status === 'success' || result.status === 'true')) {
-                showToast(isEditing ? 'Produk berhasil diupdate! ✨' : 'Produk baru meluncur!');
+                showToast(isEditing ? 'Produk berhasil diupdate! ✨' : 'Produk baru meluncur! 🚀');
                 fetchProducts();
                 return true;
             } else {
-                showToast(result.message || 'Ada yang salah...', 'error');
+                showToast(result.message || 'Ada yang salah bestie...', 'error');
                 return false;
             }
         } catch (error) {
@@ -95,17 +93,14 @@ export const useProducts = () => {
         }
     };
 
-    // --- DELETE - PROTECTED 🔒 ---
+    // DELETE
     const deleteProduct = async (id) => {
         try {
             const res = await fetch(`${API_URL}/product/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    ...getAuthHeaders() 
-                }
+                headers: { ...getAuthHeaders() }
             });
 
-            // Cek token expired
             if (res.status === 401 || res.status === 403) {
                 showToast('Sesi habis! Login ulang ya.', 'error');
                 localStorage.removeItem("authToken");
@@ -125,12 +120,5 @@ export const useProducts = () => {
         }
     };
 
-    return {
-        products,
-        loading,
-        toast,
-        submitting,
-        saveProduct,
-        deleteProduct
-    };
+    return { products, loading, toast, submitting, saveProduct, deleteProduct };
 };

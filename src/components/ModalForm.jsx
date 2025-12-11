@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Save, Loader2, Image as ImageIcon, Video as VideoIcon } from 'lucide-react';
+import { X, Save, Loader2, Image as ImageIcon, Video as VideoIcon, Box } from 'lucide-react';
 
 export default function ModalForm({ isOpen, isEditing, formData, previews, submitting, onClose, onSubmit, onChange, onFileChange }) {
     if (!isOpen) return null;
@@ -7,6 +7,7 @@ export default function ModalForm({ isOpen, isEditing, formData, previews, submi
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all animate-fade-in">
             <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl animate-fade-in-up">
+
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
                     <h2 className="text-xl font-bold text-gray-800">
@@ -53,6 +54,24 @@ export default function ModalForm({ isOpen, isEditing, formData, previews, submi
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                                     placeholder="Pisang, Gula, Coklat..."
                                 />
+                            </div>
+
+                            {/* 🔥 CHECKBOX AR (FITUR BARU) */}
+                            <div className="flex flex-col gap-1 mt-2">
+                                <div className="flex items-center gap-3 bg-indigo-50 p-3 rounded-lg border border-indigo-100 hover:border-indigo-200 transition-colors">
+                                    <input
+                                        type="checkbox"
+                                        name="has_ar"
+                                        id="has_ar"
+                                        checked={formData.has_ar}
+                                        onChange={onChange}
+                                        className="w-5 h-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 cursor-pointer"
+                                    />
+                                    <label htmlFor="has_ar" className="text-sm font-bold text-indigo-700 flex items-center gap-2 cursor-pointer select-none w-full">
+                                        <Box size={18} /> Aktifkan Fitur 3D / AR?
+                                    </label>
+                                </div>
+                                <p className="text-[10px] text-gray-500 ml-1 italic">*Centang jika file model 3D (.glb) sudah diupload manual ke folder assets.</p>
                             </div>
                         </div>
 
@@ -105,6 +124,7 @@ export default function ModalForm({ isOpen, isEditing, formData, previews, submi
                         </div>
                     </div>
 
+                    {/* Deskripsi Full Width */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
                         <textarea
@@ -114,6 +134,7 @@ export default function ModalForm({ isOpen, isEditing, formData, previews, submi
                         ></textarea>
                     </div>
 
+                    {/* Footer Actions */}
                     <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
                         <button
                             type="button" onClick={onClose}
@@ -135,15 +156,17 @@ export default function ModalForm({ isOpen, isEditing, formData, previews, submi
                     </div>
                 </form>
             </div>
+
+            {/* Styles for Animations */}
             <style>{`
-        .animate-fade-in { animation: fadeIn 0.2s ease-out; }
-        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: scale(0.95) translateY(10px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-      `}</style>
+                .animate-fade-in { animation: fadeIn 0.2s ease-out; }
+                .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                @keyframes fadeInUp {
+                    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+                    to { opacity: 1; transform: scale(1) translateY(0); }
+                }
+            `}</style>
         </div>
     );
 }
