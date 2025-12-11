@@ -30,7 +30,7 @@ export const useProducts = () => {
             if (json.status === 'success') {
                 setProducts(json.data);
             } else {
-                showToast('Gagal ambil data bestie 😭', 'error');
+                showToast('Gagal ambil data  😭', 'error');
             }
         } catch (err) {
             showToast('Server lagi ngambek nih', 'error');
@@ -82,7 +82,7 @@ export const useProducts = () => {
                 fetchProducts();
                 return true;
             } else {
-                showToast(result.message || 'Ada yang salah bestie...', 'error');
+                showToast(result.message || 'Ada yang salah ...', 'error');
                 return false;
             }
         } catch (error) {

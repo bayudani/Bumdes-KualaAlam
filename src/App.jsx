@@ -52,7 +52,7 @@ export default function App() {
   // --- HANDLERS ---
 
   const handleLogout = () => {
-    if(window.confirm("Yakin mau logout bestie? 🥺")) {
+    if(window.confirm("Yakin mau logout? 🥺")) {
         localStorage.removeItem("authToken");
         setIsAuthenticated(false);
     }
@@ -204,7 +204,7 @@ export default function App() {
         ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-2xl">
             <PackageOpen size={48} className="mb-2 opacity-50" />
-            <p>Belum ada produk nih, Bestie.</p>
+            <p>Belum ada produk nih, .</p>
           </div>
         ) : (
           /* Conditional Rendering: Table vs Grid */
